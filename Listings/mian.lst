@@ -1,0 +1,306 @@
+C51 COMPILER V9.56.0.0   MIAN                                                              02/23/2022 14:06:06 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MIAN
+OBJECT MODULE PLACED IN .\Objects\mian.obj
+COMPILER INVOKED BY: D:\Keil5 C51v956\C51\BIN\C51.EXE mian.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\mian.lst) TABS(2) OBJECT(.\Objects\mian.obj)
+
+line level    source
+
+   1          #include "config.h"
+   2          
+   3          
+   4          void port(unsigned char p2,p0)
+   5          {
+   6   1        P0 =  p0;
+   7   1        P2 = (P2&0X1F)|p2;
+   8   1        P0 = p0;
+   9   1      }
+  10          
+  11          void allinit()
+  12          {
+  13   1        port(0x80,0xff);
+  14   1        port(0xa0,0x00);
+  15   1        port(0xc0,0xff);
+  16   1        port(0xe0,0xff);
+  17   1      }
+  18          
+  19          void Timer0Init(void)   //100??@11.0592MHz
+  20          {
+  21   1        AUXR |= 0x80;   //?????1T??
+  22   1        TMOD &= 0xF0;   //???????
+  23   1        TL0 = 0xAE;   //???????
+  24   1        TH0 = 0xFB;   //???????
+  25   1        TF0 = 0;    //??TF0??
+  26   1        TR0 = 1;    //???0????
+  27   1        
+  28   1        ET0 = 1;
+  29   1        EA = 1;
+  30   1      }
+  31          
+  32          
+  33          
+  34          
+  35          u8 keyscan()
+  36          {
+  37   1        static u8 key_stat = stat0;
+  38   1        u8 key_value = 0,key_temp;
+  39   1        u8 key1,key2;
+  40   1        P30=0;P31=0;P32=0;P33=0;P34=1;P35=1;P42=1;P44=1;
+  41   1        if(P44==0)key1=0x70;
+  42   1        if(P42==0)key1=0xb0;
+  43   1        if(P35==0)key1=0xd0;
+  44   1        if(P44==0)key1=0xe0;
+  45   1        P30=1;P31=1;P32=1;P33=1;P34=0;P35=0;P42=0;P44=0;
+  46   1        if(P33==0)key2=0x07;
+  47   1        if(P32==0)key2=0x0b;
+  48   1        if(P31==0)key2=0x0d;
+  49   1        if(P30==0)key2=0x0e;
+  50   1        
+  51   1        key_temp = key1 | key2;
+  52   1        
+  53   1        switch(key_stat)
+  54   1        {
+C51 COMPILER V9.56.0.0   MIAN                                                              02/23/2022 14:06:06 PAGE 2   
+
+  55   2          case stat0:
+  56   2            if(key_temp!=nokey)
+  57   2            {
+  58   3              key_stat = stat1;
+  59   3            }
+  60   2          case stat1:
+  61   2            if(key_temp==nokey)
+  62   2            {
+  63   3              key_stat = stat0;
+  64   3            }
+  65   2            else
+  66   2            {
+  67   3              switch(key_temp)
+  68   3              {
+  69   4                case 0x77:key_value=4;break;
+  70   4                case 0x7b:key_value=5;break;
+  71   4                case 0x7d:key_value=6;break;
+  72   4                case 0x7e:key_value=7;break;
+  73   4                
+  74   4                case 0xb7:key_value=8;break;
+  75   4                case 0xbb:key_value=9;break;
+  76   4                case 0xbd:key_value=10;break;
+  77   4                case 0xbe:key_value=11;break;
+  78   4                
+  79   4                case 0xd7:key_value=12;break;
+  80   4                case 0xdb:key_value=13;break;
+  81   4                case 0xdd:key_value=14;break;
+  82   4                case 0xde:key_value=15;break;
+  83   4                
+  84   4                case 0xe7:key_value=16;break;
+  85   4                case 0xeb:key_value=17;break;
+  86   4                case 0xed:key_value=18;break;
+  87   4                case 0xee:key_value=19;break;
+  88   4              }
+  89   3              key_stat = stat2;
+  90   3            }
+  91   2          case stat2:
+  92   2            if(key_temp != nokey)
+  93   2            {
+  94   3              key_stat = stat0;
+  95   3              break;
+  96   3            }
+  97   2        }
+  98   1        
+  99   1        return key_value;
+ 100   1      }
+ 101          
+ 102          
+ 103          
+ 104          
+ 105          void new_keyscan()
+ 106          {
+ 107   1        static u8 key_stat = stat0;
+ 108   1        u8 key_value = 0,key_temp;
+ 109   1        u8 key1,key2;
+ 110   1        P30=0;P31=0;P32=0;P33=0;P34=1;P35=1;P42=1;P44=1;
+ 111   1        if(P44==0)key1=0x70;
+ 112   1        if(P42==0)key1=0xb0;
+ 113   1        if(P35==0)key1=0xd0;
+ 114   1        if(P44==0)key1=0xe0;
+ 115   1        P30=1;P31=1;P32=1;P33=1;P34=0;P35=0;P42=0;P44=0;
+ 116   1        if(P33==0)key2=0x07;
+C51 COMPILER V9.56.0.0   MIAN                                                              02/23/2022 14:06:06 PAGE 3   
+
+ 117   1        if(P32==0)key2=0x0b;
+ 118   1        if(P31==0)key2=0x0d;
+ 119   1        if(P30==0)key2=0x0e;
+ 120   1        
+ 121   1        key_temp = key1 | key2;
+ 122   1        
+ 123   1        switch(key_stat)
+ 124   1        {
+ 125   2          case stat0:
+ 126   2            if(key_temp!=nokey)
+ 127   2            {
+ 128   3              key_stat = stat1;
+ 129   3            }
+ 130   2          case stat1:
+ 131   2            if(key_temp==nokey)
+ 132   2            {
+ 133   3              key_stat = stat0;
+ 134   3            }
+ 135   2            else
+ 136   2            {
+ 137   3              switch(key_temp)
+ 138   3              {
+ 139   4                case 0x77:undefined_key++;break;
+ 140   4                case 0x7b:undefined_key++;break;
+ 141   4                case 0x7d:undefined_key++;break;
+ 142   4                case 0x7e:undefined_key++;break;
+ 143   4                
+ 144   4                case 0xb7:undefined_key++;break;
+ 145   4                case 0xbb:undefined_key++;break;
+ 146   4                case 0xbd:undefined_key++;break;
+ 147   4                case 0xbe:undefined_key++;break;
+ 148   4                
+ 149   4                case 0xd7://S12
+ 150   4                  undefined_key=0;
+ 151   4                  if(mode_set==1) write_at24c02(0x00,(u8)(volt_seting/10));
+ 152   4                  if(++mode_set==3)mode_set=0;
+ 153   4                break;
+ 154   4                case 0xdb://S13
+ 155   4                  undefined_key=0;
+ 156   4                  if(mode_set==2)jishu=0;
+ 157   4                break;
+ 158   4                case 0xdd:undefined_key++;break;
+ 159   4                case 0xde:undefined_key++;break;
+ 160   4                
+ 161   4                case 0xe7://S16
+ 162   4                  undefined_key=0;
+ 163   4                  if(mode_set==1)
+ 164   4                  {
+ 165   5                    if(volt_seting==0)
+ 166   5                      volt_seting=500;
+ 167   5                    else
+ 168   5                      volt_seting-=50;
+ 169   5                  }
+ 170   4                break;
+ 171   4                case 0xeb:
+ 172   4                undefined_key=0;
+ 173   4                  if(mode_set==1)
+ 174   4                  {
+ 175   5                    if(volt_seting>=500)
+ 176   5                      volt_seting=0;
+ 177   5                    else
+ 178   5                      volt_seting+=50;
+C51 COMPILER V9.56.0.0   MIAN                                                              02/23/2022 14:06:06 PAGE 4   
+
+ 179   5                  } 
+ 180   4                break;
+ 181   4                case 0xed:undefined_key++;break;
+ 182   4                case 0xee:undefined_key++;break;
+ 183   4              }
+ 184   3              key_stat = stat2;
+ 185   3            }
+ 186   2          case stat2:
+ 187   2            if(key_temp != nokey)
+ 188   2            {
+ 189   3              key_stat = stat0;
+ 190   3              break;
+ 191   3            }
+ 192   2        }
+ 193   1      }
+ 194          
+ 195          void dis_smg(u8 pos,u8 value)
+ 196          {
+ 197   1      //  XBYTE[0xa000] = 0x01 << pos;
+ 198   1      //  XBYTE[0xc000] = value;
+ 199   1        port(0xc0,0x01<<pos);
+ 200   1        port(0xe0,value);
+ 201   1      }
+ 202          
+ 203          
+ 204          void KBD()
+ 205          {
+ 206   1        //设置键盘fla定是否有按键按下以及案件的松动
+ 207   1      //  u8 num_1; 
+ 208   1        u8 num;
+ 209   1        num = keyscan();      //如何控制在模式1 的情况下，其他按键无效？？？？？
+ 210   1        switch(num)
+ 211   1        {
+ 212   2          case 12:
+ 213   2          {
+ 214   3            mode_set++;
+ 215   3            if(mode_set==3)
+ 216   3            {mode_set = 0;}
+ 217   3          }
+ 218   2          break;
+ 219   2          
+ 220   2          case 13:
+ 221   2            undefined_key = 0;
+ 222   2          break;
+ 223   2          default:undefined_key++;break;
+ 224   2        }
+ 225   1        num = 0;
+ 226   1        
+ 227   1      }
+ 228          
+ 229          void dis_mode()
+ 230          {
+ 231   1        switch(mode_set)
+ 232   1        {
+ 233   2          case 0:
+ 234   2          {
+ 235   3            dis_smg(0,biaoshi[2]);
+ 236   3            dis_smg(0,biaoshi[2]);
+ 237   3            dis_smg(0,biaoshi[2]);
+ 238   3          }
+ 239   2            break;
+ 240   2          
+C51 COMPILER V9.56.0.0   MIAN                                                              02/23/2022 14:06:06 PAGE 5   
+
+ 241   2          case 1:
+ 242   2            
+ 243   2          break;
+ 244   2          
+ 245   2          case 2:
+ 246   2            
+ 247   2          break;  
+ 248   2        }
+ 249   1      }
+ 250          
+ 251          
+ 252          
+ 253          void main()
+ 254          {
+ 255   1        while(1)
+ 256   1        {
+ 257   2          if(key_flag)
+ 258   2          {
+ 259   3            key_flag=0;
+ 260   3            KBD();
+ 261   3          }
+ 262   2        }
+ 263   1      }
+ 264          
+ 265          void timer0() interrupt 1 using 1
+ 266          {
+ 267   1        count++;
+ 268   1        if(count == 20)
+ 269   1        {
+ 270   2          key_flag=1;
+ 271   2          count = 0;
+ 272   2        }
+ 273   1        
+ 274   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    752    ----
+   CONSTANT SIZE    =     25    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     11       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
