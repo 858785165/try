@@ -1,0 +1,61 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              02/27/2022 16:39:49 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <STC15F2K60S2.H>
+   2          #define u8 unsigned char
+   3          #include "intrins.h"
+   4          u8 TAB[]={0x18,0x24,0x42,0x81,0x18,0x24,0x42,0x81};
+   5          
+   6          void Delay500ms()   //@11.0592MHz
+   7          {
+   8   1        unsigned char i, j, k;
+   9   1      
+  10   1        _nop_();
+  11   1        _nop_();
+  12   1        i = 22;
+  13   1        j = 3;
+  14   1        k = 227;
+  15   1        do
+  16   1        {
+  17   2          do
+  18   2          {
+  19   3            while (--k);
+  20   3          } while (--j);
+  21   2        } while (--i);
+  22   1      }
+  23          
+  24          void main()
+  25          {
+  26   1        while(1)
+  27   1        {
+  28   2          u8 i;
+  29   2          for(i=0;i<9;i++)
+  30   2          {
+  31   3          P2=0X00;P0=0X00;P2=0X00;
+  32   3          P2=0X80;P0=~TAB[i];P2=0x00;
+  33   3          Delay500ms();
+  34   3          
+  35   3          }
+  36   2      }
+  37   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     54    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

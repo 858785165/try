@@ -1,0 +1,172 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              02/27/2022 15:30:49 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <STC15F2K60S2.H>
+   2          #include "intrins.h"
+   3          #define u8 unsigned char
+   4          #define stat0 0
+   5          #define stat1 1
+   6          #define stat2 2
+   7          #define nokey 0xff
+   8          u8 code duanma[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xbf,0xff};
+   9          u8 TAB[8]={11,11,11,11,11,11,11,11};
+  10          
+  11          void Delay100us()   //@11.0592MHz
+  12          {
+  13   1        unsigned char i, j;
+  14   1      
+  15   1        _nop_();
+  16   1        _nop_();
+  17   1        i = 2;
+  18   1        j = 15;
+  19   1        do
+  20   1        {
+  21   2          while (--j);
+  22   2        } while (--i);
+  23   1      }
+  24          
+  25          u8 key_scan()
+  26          {
+  27   1        static unsigned char stat=stat0;
+  28   1        u8 key_temp=0,key_value;
+  29   1        u8 key1,key2;
+  30   1        
+  31   1        P30=0;P31=0;P32=0;P33=0;P34=1;P35=1;P42=1;P44=1;
+  32   1        if(P44==0) key1=0x70;
+  33   1        if(P42==0) key1=0xb0;
+  34   1        if(P35==0) key1=0xd0;
+  35   1        if(P34==0) key1=0xe0;
+  36   1        if((P44==1)&&(P42==1)&&(P35==1)&&(P34==1)) key1=0xf0;
+  37   1        
+  38   1        P30=1;P31=1;P32=1;P33=1;P34=0;P35=0;P42=0;P44=0;
+  39   1        if(P33==0) key2=0x07;
+  40   1        if(P32==0) key2=0x0b;
+  41   1        if(P31==0) key2=0x0d;
+  42   1        if(P30==0) key2=0x0e;
+  43   1        if((P33==1)&&(P32==1)&&(P31==1)&&(P30==1)) key2=0x0f;
+  44   1        
+  45   1        key_temp = key1 |key2;
+  46   1        
+  47   1        switch(stat)
+  48   1        {
+  49   2          case stat0:
+  50   2            if(key_temp!=nokey)
+  51   2            {
+  52   3              stat=stat1;
+  53   3            }
+  54   2          break;
+C51 COMPILER V9.56.0.0   MAIN                                                              02/27/2022 15:30:49 PAGE 2   
+
+  55   2          
+  56   2          case stat1:
+  57   2            if(key_temp==nokey)
+  58   2            {
+  59   3              stat=stat0;
+  60   3            }
+  61   2            else
+  62   2            {
+  63   3              switch(key_temp)
+  64   3              {
+  65   4                case 0x77:key_value=4;break;
+  66   4                case 0x7b:key_value=5;break;
+  67   4                case 0x7d:key_value=6;break;
+  68   4                case 0x7e:key_value=7;break;
+  69   4                
+  70   4                case 0xb7:key_value=8;break;
+  71   4                case 0xbb:key_value=9;break;
+  72   4                case 0xbd:key_value=10;break;
+  73   4                case 0xbe:key_value=11;break;
+  74   4                
+  75   4                case 0xd7:key_value=12;break;
+  76   4                case 0xdb:key_value=13;break;
+  77   4                case 0xdd:key_value=14;break;
+  78   4                case 0xde:key_value=15;break;
+  79   4                
+  80   4                case 0xe7:key_value=16;break;
+  81   4                case 0xeb:key_value=17;break;
+  82   4                case 0xed:key_value=18;break;
+  83   4                case 0xee:key_value=19;break;       
+  84   4              }
+  85   3              stat=stat2;
+  86   3            }
+  87   2            break;
+  88   2          case stat2:
+  89   2            if(key_temp==nokey)
+  90   2            {
+  91   3              stat=stat0;
+  92   3            }
+  93   2            break;
+  94   2        }
+  95   1        return key_value;
+  96   1      }
+  97          
+  98          void dis_smg(u8 pos,u8 value)
+  99          {
+ 100   1        P2=0x00;P0=0x00;P2=0x00;
+ 101   1        P2=0xC0;P0=0X01<<pos;P2=0x00;
+ 102   1        P2=0xE0;P0=value;P2=0x00;
+ 103   1      }
+ 104          
+ 105          
+ 106          u8 key_val;
+ 107          void main()
+ 108          {
+ 109   1        P2=0xa0;P0=0x00;P2=0x00;
+ 110   1        P2=0x80;P0=0xff;P2=0x00;
+ 111   1        while(1)
+ 112   1        {
+ 113   2          u8 i=0;
+ 114   2          key_val=key_scan();
+ 115   2          switch(key_val)
+ 116   2          {
+C51 COMPILER V9.56.0.0   MAIN                                                              02/27/2022 15:30:49 PAGE 3   
+
+ 117   3            case 4:TAB[6]=11;TAB[7]=4;break;
+ 118   3            case 5:TAB[6]=11;TAB[7]=5;break;
+ 119   3            case 6:TAB[6]=11;TAB[7]=6;break;
+ 120   3            case 7:TAB[6]=11;TAB[7]=7;break;
+ 121   3            
+ 122   3            case 8:TAB[7]=8;break;
+ 123   3            case 9:TAB[7]=9;break;
+ 124   3            case 10:TAB[6]=1;TAB[7]=0;break;
+ 125   3            case 11:TAB[6]=1;TAB[7]=1;break;
+ 126   3            
+ 127   3            case 12:TAB[6]=1;TAB[7]=2;break;
+ 128   3            case 13:TAB[6]=1;TAB[7]=3;break;
+ 129   3            case 14:TAB[6]=1;TAB[7]=4;break;
+ 130   3            case 15:TAB[6]=1;TAB[7]=5;break;
+ 131   3            
+ 132   3            case 16:TAB[6]=1;TAB[7]=6;break;
+ 133   3            case 17:TAB[6]=1;TAB[7]=7;break;
+ 134   3            case 18:TAB[6]=1;TAB[7]=8;break;
+ 135   3            case 19:TAB[6]=1;TAB[7]=9;break;
+ 136   3          }
+ 137   2          for(i=0;i<8;i++)
+ 138   2          {
+ 139   3            dis_smg(i,duanma[TAB[i]]);
+ 140   3            Delay100us();
+ 141   3          }
+ 142   2        }
+ 143   1      }
+ 144          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    590    ----
+   CONSTANT SIZE    =     12    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     10       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
